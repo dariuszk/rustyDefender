@@ -1,6 +1,9 @@
 use bevy::prelude::*;
+use bevy::render::camera::ScalingMode;
 
 mod tower;
+
+pub use tower::*;
 
 pub const HEIGHT: f32 = 800.;
 pub const WIDTH: f32 = 1920.;
@@ -17,6 +20,7 @@ fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
+        .add_plugin(TowerPlugin)
         .add_startup_system(setup_scene)
         .add_startup_system(spawn_camera)
         .run();
@@ -28,7 +32,7 @@ fn setup_scene(
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     const PLANE_COLOR: Color = Color::rgb(0.6, 0.0, 0.75);
-    const PLANE_SIZE: f32 = 10.;
+    const PLANE_SIZE: f32 = 5.;
 
     // Setup plane
     commands.spawn_bundle(PbrBundle {
@@ -50,10 +54,13 @@ fn setup_scene(
 
 fn spawn_camera(mut commands: Commands) {
     commands.spawn_bundle(Camera3dBundle {
-        transform: Transform::from_matrix(Mat4::from_rotation_translation(
-            Quat::from_xyzw(-0.3, -0.5, -0.3, 0.5).normalize(),
-            Vec3::new(-6.0, 10.0, 0.0),
-        )),
+        projection: OrthographicProjection {
+            scale: 3.0,
+            scaling_mode: ScalingMode::FixedVertical(1.4),
+            ..default()
+        }
+            .into(),
+        transform: Transform::from_xyz(4.0, 4.0, 4.0).looking_at(Vec3::ZERO, Vec3::Y),
         ..default()
     });
 }
