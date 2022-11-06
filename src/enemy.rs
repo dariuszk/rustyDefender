@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use crate::AssetsHolder;
 
 
 //TODO: More fancy names needed
@@ -24,14 +25,14 @@ impl Plugin for EnemyPlugin {
 
 fn spawn_enemy(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
+    game_assets: Res<AssetsHolder>,
 
 )
 {
-    let enemy_model =  asset_server.load("EnemyE1.glb#Scene0");
+
 
     commands.spawn_bundle( SceneBundle{
-        scene: enemy_model,
+        scene: game_assets.enemy_e1.clone(),
         transform: Transform::from_xyz(1.0, 0.0, 0.0),
         ..default()
     })

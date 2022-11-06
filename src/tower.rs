@@ -1,4 +1,6 @@
 use bevy::prelude::*;
+use crate::AssetsHolder;
+
 
 #[derive(  Component)]
 pub enum TowerType{
@@ -21,14 +23,12 @@ impl Plugin for TowerPlugin {
 
 fn spawn_tower(
     mut commands: Commands,
-    asset_server: Res<AssetServer>
+    game_assets: Res<AssetsHolder>,
 )
 {
-    let tower_model = asset_server.load("TowerT1.glb#Scene0");
-
     commands
         .spawn_bundle(SceneBundle  {
-             scene: tower_model,
+             scene: game_assets.tower_t1.clone(),
              transform: Transform::from_xyz(0.0, 0.0, 0.0),
             ..default()
         })
