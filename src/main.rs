@@ -2,8 +2,10 @@ use bevy::prelude::*;
 use bevy::render::camera::ScalingMode;
 
 mod tower;
+mod enemy;
 
 pub use tower::*;
+pub use enemy::*;
 
 pub const HEIGHT: f32 = 800.;
 pub const WIDTH: f32 = 1920.;
@@ -21,6 +23,7 @@ fn main() {
         })
         .add_plugins(DefaultPlugins)
         .add_plugin(TowerPlugin)
+        .add_plugin(EnemyPlugin)
         .add_startup_system(setup_scene)
         .add_startup_system(spawn_camera)
         .run();
