@@ -9,6 +9,7 @@ pub enum TowerType{
 
 #[derive(Reflect, Component, Default)]
 #[reflect(Component)]
+
 pub struct Tower {
 
 }
@@ -29,7 +30,7 @@ fn spawn_tower(
     commands
         .spawn_bundle(SceneBundle  {
              scene: game_assets.tower_t1.clone(),
-             transform: Transform::from_xyz(0.0, 0.0, 0.0),
+             transform: Transform::from_xyz(0.0, 1.0, 0.0),
             ..default()
         })
         .insert(TowerType::T1)

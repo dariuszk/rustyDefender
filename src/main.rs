@@ -3,33 +3,42 @@ use bevy::render::camera::ScalingMode;
 
 mod tower;
 mod enemy;
+mod board;
 
 pub use tower::*;
 pub use enemy::*;
+pub use board::*;
 
 pub const HEIGHT: f32 = 800.;
 pub const WIDTH: f32 = 1920.;
 pub const GAME_NAME: &str = "Rusty Defender";
 
+#[derive(Resource)]
 pub struct AssetsHolder{
     tower_t1: Handle<Scene>,
     enemy_e1: Handle<Scene>,
 }
 
 
+
+
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::rgb(0.2, 0.2, 0.2)))
-        .insert_resource(WindowDescriptor {
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            window:  WindowDescriptor {
             width: WIDTH,
             height: HEIGHT,
             title: GAME_NAME.to_string(),
             resizable: false,
-            ..Default::default()
-        })
-        .add_plugins(DefaultPlugins)
+            ..default()
+        },
+        ..default()}))
+        //
+        // .add_plugins(DefaultPlugins)
         .add_plugin(TowerPlugin)
         .add_plugin(EnemyPlugin)
+        .add_plugin(BoardPlugin)
         .add_startup_system(setup_scene)
         .add_startup_system(spawn_camera)
         .add_startup_system_to_stage(StartupStage::PreStartup, preload_assets)
@@ -49,15 +58,7 @@ fn setup_scene(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    const PLANE_COLOR: Color = Color::rgb(0.6, 0.0, 0.75);
-    const PLANE_SIZE: f32 = 10.;
 
-    // Setup plane
-    commands.spawn_bundle(PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Plane { size: PLANE_SIZE })),
-        material: materials.add(PLANE_COLOR.into()),
-        ..default()
-    });
     // Light
     commands.spawn_bundle(PointLightBundle {
         point_light: PointLight {
