@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy::render::camera::ScalingMode;
+use bevy_inspector_egui::{WorldInspectorPlugin, Inspectable, RegisterInspectable};
 
 mod tower;
 mod enemy;
@@ -19,8 +20,11 @@ pub struct AssetsHolder{
     enemy_e1: Handle<Scene>,
 }
 
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+pub enum GameState {
 
-
+    Gameplay,
+}
 
 fn main() {
     App::new()
@@ -34,13 +38,14 @@ fn main() {
             ..default()
         },
         ..default()}))
-        //
-        // .add_plugins(DefaultPlugins)
+        .add_state(GameState::Gameplay)
+        .add_plugin(WorldInspectorPlugin::new())
         .add_plugin(TowerPlugin)
         .add_plugin(EnemyPlugin)
         .add_plugin(BoardPlugin)
-        .add_startup_system(setup_scene)
         .add_startup_system(spawn_camera)
+
+        .add_system_set(SystemSet::on_enter(GameState::Gameplay).with_system(setup_scene))
         .add_startup_system_to_stage(StartupStage::PreStartup, preload_assets)
         .run();
 }
@@ -55,8 +60,6 @@ fn preload_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 fn setup_scene(
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
 
     // Light

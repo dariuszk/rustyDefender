@@ -18,7 +18,8 @@ pub struct TowerPlugin;
 
 impl Plugin for TowerPlugin {
     fn build(&self, app: &mut App) {
-        app.register_type::<Tower>().add_system(spawn_tower);
+
+        app.register_type::<Tower>().add_startup_system(spawn_tower);
     }
 }
 

@@ -1,8 +1,8 @@
-use std::f32::consts::PI;
+
 use bevy::prelude::*;
 use rand::Rng;
 
-use crate::AssetsHolder;
+use crate::{AssetsHolder, GameState};
 
 
 //TODO: More fancy names needed
@@ -22,7 +22,7 @@ pub struct EnemyPlugin;
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<Enemy>()
-            .add_startup_system(spawn_enemy)
+            .add_system_set(SystemSet::on_enter(GameState::Gameplay).with_system(spawn_enemy))
             .add_system(enemy_movement_system);
     }
 }
@@ -44,26 +44,25 @@ fn spawn_enemy(
 }
 
 fn enemy_movement_system(mut enemies: Query<(&Enemy, &mut Transform)>, time: Res<Time>) {
-    let now = time.elapsed_seconds();
-    let  speed = 0.1;
+
     for (_enemy, mut transform) in &mut enemies {
 
 
         let x_ori = transform.translation.x;
         let z_ori = transform.translation.z;
 
-        let (x_off, y_off) = (0., 100.);
+
 
 
         let mut rng = rand::thread_rng();
 
-        let mut x  = ( x_ori + rng.gen_range(-0.5..0.5) ) ;
-        let mut z = ( z_ori + rng.gen_range(-0.5..0.5) );
+        let mut x  =  x_ori + rng.gen_range(-0.5..0.5)  ;
+        let mut z = z_ori + rng.gen_range(-0.5..0.5) ;
 
-        if x > 5 as f32 || x < -5 as f32 {
+        if !(-5_f32..=5_f32).contains(&x) {
              x = x_ori - rng.gen_range(0.0..0.5);
          }
-        if z > 5 as f32 || z < -5 as f32{
+        if !(-5_f32..=5_f32).contains(&z){
            z = z_ori - rng.gen_range(0.0..0.5);
         }
 
