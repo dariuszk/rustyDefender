@@ -20,6 +20,25 @@ pub struct AssetsHolder{
     enemy_e1: Handle<Scene>,
 }
 
+
+#[derive( Resource)]
+struct Game {
+    nav_point_vecs:   [Vec3; 4]
+}
+
+impl FromWorld for Game {
+
+    fn from_world(_world: &mut World) -> Self {
+        Game {
+            nav_point_vecs: [Vec3 { x: 5.0, y: 0.0, z: 0.0 }
+                , Vec3 { x: 0.0, y: 0.0, z: -5.0 }
+                , Vec3 { x: -5.0, y: 0.0, z: 0.0 }
+                , Vec3 { x: 0.0, y: 0.0, z: 5.0 }]
+        }
+    }
+
+
+}
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub enum GameState {
 
@@ -29,6 +48,9 @@ pub enum GameState {
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::rgb(0.2, 0.2, 0.2)))
+        .init_resource::<Game>(
+
+        )
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             window:  WindowDescriptor {
             width: WIDTH,
@@ -63,7 +85,7 @@ fn setup_scene(
 ) {
 
     // Light
-    commands.spawn_bundle(PointLightBundle {
+    commands.spawn(PointLightBundle {
         point_light: PointLight {
             intensity: 1500.0,
             shadows_enabled: true,
@@ -75,7 +97,7 @@ fn setup_scene(
 }
 
 fn spawn_camera(mut commands: Commands) {
-    commands.spawn_bundle(Camera3dBundle {
+    commands.spawn(Camera3dBundle {
         projection: OrthographicProjection {
             scale: 2.0,
             scaling_mode: ScalingMode::FixedVertical(4.),

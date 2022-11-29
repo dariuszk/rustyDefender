@@ -29,7 +29,7 @@ fn spawn_tower(
 )
 {
     commands
-        .spawn_bundle(SceneBundle  {
+        .spawn(SceneBundle  {
              scene: game_assets.tower_t1.clone(),
              transform: Transform::from_xyz(0.0, 1.0, 0.0),
             ..default()
