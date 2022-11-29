@@ -5,10 +5,12 @@ use bevy_inspector_egui::{WorldInspectorPlugin, Inspectable, RegisterInspectable
 mod tower;
 mod enemy;
 mod board;
+mod missile;
 
 pub use tower::*;
 pub use enemy::*;
 pub use board::*;
+pub use missile::*;
 
 pub const HEIGHT: f32 = 800.;
 pub const WIDTH: f32 = 1920.;
@@ -65,6 +67,7 @@ fn main() {
         .add_plugin(TowerPlugin)
         .add_plugin(EnemyPlugin)
         .add_plugin(BoardPlugin)
+        .add_plugin(MissilePlugin)
         .add_startup_system(spawn_camera)
 
         .add_system_set(SystemSet::on_enter(GameState::Gameplay).with_system(setup_scene))
