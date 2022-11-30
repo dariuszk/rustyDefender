@@ -1,3 +1,4 @@
+use bevy::core_pipeline::tonemapping::Tonemapping;
 use bevy::prelude::*;
 use bevy::render::camera::ScalingMode;
 use bevy_inspector_egui::{WorldInspectorPlugin};
@@ -19,6 +20,8 @@ pub const GAME_NAME: &str = "Rusty Defender";
 #[derive(Resource)]
 pub struct AssetsHolder{
     tower_t1: Handle<Scene>,
+    tower_base: Handle<Scene>,
+    tower_bottom: Handle<Scene>,
     enemy_e1: Handle<Scene>,
 }
 
@@ -50,6 +53,7 @@ pub enum GameState {
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::rgb(0.2, 0.2, 0.2)))
+        .insert_resource(Msaa { samples: 4 })
         .init_resource::<Game>(
 
         )
@@ -78,6 +82,8 @@ fn main() {
 fn preload_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.insert_resource(AssetsHolder {
         tower_t1: asset_server.load("TowerT1.glb#Scene0"),
+        tower_base : asset_server.load("Enemy_Base.glb#Scene0"),
+        tower_bottom : asset_server.load("Enemy_Bottom.glb#Scene0"),
         enemy_e1: asset_server.load("EnemyE1.glb#Scene0")
     });
 }
@@ -90,8 +96,8 @@ fn setup_scene(
     // Light
     commands.spawn(PointLightBundle {
         point_light: PointLight {
-            intensity: 1500.0,
-            shadows_enabled: true,
+            intensity: 1600.0,
+
             ..default()
         },
         transform: Transform::from_translation(Vec3::new(4.0, 8.0, 4.0)),
@@ -101,6 +107,9 @@ fn setup_scene(
 
 fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera3dBundle {
+        tonemapping: Tonemapping::Enabled {
+            deband_dither: true,
+        },
         projection: OrthographicProjection {
             scale: 2.0,
             scaling_mode: ScalingMode::FixedVertical(4.),

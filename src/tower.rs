@@ -34,12 +34,33 @@ fn spawn_tower(
     game_assets: Res<AssetsHolder>,
 )
 {
+
+
+
     commands
         .spawn(SceneBundle  {
              scene: game_assets.tower_t1.clone(),
              transform: Transform::from_xyz(0.0, 1.0, 0.0),
             ..default()
         })
+        .with_children(|parent| {
+
+            parent.spawn(SceneBundle  {
+                scene: game_assets.tower_base.clone(),
+                transform: Transform::from_xyz(0.0, -1.0, 0.0),
+                ..default()
+            });
+
+
+        })
+        .with_children(|parent| {
+            parent.spawn(SceneBundle {
+                scene: game_assets.tower_bottom.clone(),
+                transform: Transform::from_xyz(0.0, -0.8, 0.0),
+                ..default()
+            });
+        })
+
         .insert(TowerType::T1)
         .insert(Tower {
             shooting_interval: Timer::from_seconds(0.3, TimerMode::Repeating),
