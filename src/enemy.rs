@@ -41,8 +41,7 @@ fn spawn_enemy(
             nav.0.index
         });
 
-    if let Some(target_navpt) = target_navpt {
-        error!("index: {}", target_navpt.1.translation);
+    if let Some(_target_navpt) = target_navpt {
 
     commands.spawn( SceneBundle{
         scene: game_assets.enemy_e1.clone(),
@@ -58,18 +57,17 @@ fn spawn_enemy(
 }
 
 fn enemy_movement_system(mut enemies: Query<(&Enemy, &mut Transform), Without<NavPoint>>
-                        , nav_point: Query<(&NavPoint, &mut Transform)>
+                        , _nav_point: Query<(&NavPoint, &mut Transform)>
                         , time: Res<Time>
-                        , mut game: ResMut<Game>
+                        , game: ResMut<Game>
                          ) {
 
 
     for (_enemy,  mut _enemy_transform) in &mut enemies {
 
         let target_move_vec =  game.nav_point_vecs[_enemy.move_target_index];
-        error!("target_move_vec {}", target_move_vec);
         let direction = - target_move_vec - _enemy_transform.translation ;
-        _enemy_transform.translation += (direction).normalize() * 2.0 * time.delta_seconds();
+        _enemy_transform.translation += (direction).normalize() * 1.2 * time.delta_seconds();
 
     }
 }
@@ -85,7 +83,7 @@ fn enemy_reach_nav_point(
         for (mut _enemy, enemy_transform) in &mut enemies {
 
 
-            game.nav_point_vecs.iter().enumerate().for_each(|(ix, &_vec)| {
+            game.nav_point_vecs.iter().enumerate().for_each(|(_ix, &_vec)| {
                 if Vec3::distance(enemy_transform.translation, _vec) > 2. {
 
                 }

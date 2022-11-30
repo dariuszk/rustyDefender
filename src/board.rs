@@ -30,7 +30,7 @@ impl Plugin for BoardPlugin {
 fn spawn_nav_points(    mut commands: Commands,
                         mut meshes: ResMut<Assets<Mesh>>,
                         mut materials: ResMut<Assets<StandardMaterial>>,
-                        mut game: ResMut<Game>)
+                        game: ResMut<Game>)
 {
     const COLOR: Color = Color::rgb(0.8, 0.0, 0.0);
 

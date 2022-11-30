@@ -13,4 +13,5 @@ opt-level = 3
 bevy = {version = "0.9", features = ["dynamic", "bevy_gltf"] }
 bevy_rapier3d = { version = "*", features = [ "simd-stable", "debug-render" ] }
 bevy-inspector-egui = { version = "*"}
+bevy_mod_picking = "0.10"
 rand = "0.8.4"

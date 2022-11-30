@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy::render::camera::ScalingMode;
-use bevy_inspector_egui::{WorldInspectorPlugin, Inspectable, RegisterInspectable};
+use bevy_inspector_egui::{WorldInspectorPlugin};
 
 mod tower;
 mod enemy;
