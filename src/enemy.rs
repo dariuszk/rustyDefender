@@ -25,7 +25,9 @@ impl Plugin for EnemyPlugin {
         app.register_type::<Enemy>()
             .add_system_set(SystemSet::on_enter(GameState::Gameplay).with_system(spawn_enemy))
             .add_system(enemy_movement_system)
-            .add_system(enemy_reach_nav_point);
+            .add_system(enemy_reach_nav_point)
+            .add_system(rotate_system);
+
     }
 }
 
@@ -45,7 +47,8 @@ fn spawn_enemy(
 
     commands.spawn( SceneBundle{
         scene: game_assets.enemy_e1.clone(),
-        transform: Transform::from_xyz(-4.0, 0.0, 0.0),
+        transform: Transform::from_xyz(-4.0, 2.5, 0.0),
+
         ..default()
     })
 
@@ -68,6 +71,23 @@ fn enemy_movement_system(mut enemies: Query<(&Enemy, &mut Transform), Without<Na
         let target_move_vec =  game.nav_point_vecs[_enemy.move_target_index];
         let direction = - target_move_vec - _enemy_transform.translation ;
         _enemy_transform.translation += (direction).normalize() * 1.2 * time.delta_seconds();
+
+    }
+}
+
+
+fn rotate_system(
+    time: Res<Time>,
+    mut query: Query<(
+        &mut Transform,
+        With<Enemy>
+    )>,
+) {
+    for (mut transform, is_rotation_entity) in query.iter_mut() {
+
+        transform.rotation = Quat::from_rotation_y(  2.0 * -time.elapsed_seconds());
+        transform.rotation *= Quat::from_rotation_x(0.16);
+
 
     }
 }
